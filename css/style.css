@@ -1,0 +1,714 @@
+/* --- General Styling --- */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Exo", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f9fafb;
+    overflow-x: hidden;
+}
+
+/* --- Header Styling --- */
+.site-header {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: radial-gradient(ellipse at center, #f5f7fa 0%, #e8edf3 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* --- Konten Teks --- */
+.header-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 20px;
+    animation:
+        fadeIn 1.5s ease-in-out,
+        textFloat 6s ease-in-out 1.5s infinite alternate;
+}
+
+.header-content h1 {
+    font-size: 3.5rem;
+    color: #1F2937;
+    margin-bottom: 16px;
+    /* [PERUBAHAN] Shadow diubah agar lebih lembut dan meningkatkan keterbacaan */
+    text-shadow: 0px 4px 20px rgba(224, 232, 240, 0.8);
+}
+
+.gradient-text {
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.header-content p {
+    font-size: 1.125rem;
+    color: #4B5563;
+    line-height: 1.6;
+}
+
+/* --- Tombol Scroll Down --- */
+.scroll-down-btn {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    width: 60px;
+    height: 60px;
+    border: 2px solid #b8c5d6;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+    animation: bounce 2.5s infinite ease-in-out;
+}
+
+.scroll-down-btn svg {
+    width: 30px;
+    height: 30px;
+    color: #4b5563;
+    transition: color 0.3s;
+}
+
+.scroll-down-btn:hover {
+    background-color: #ffffff;
+    border-color: #4b5563;
+    animation-play-state: paused;
+}
+
+.scroll-down-btn:hover svg {
+    color: #1f2937;
+}
+
+/* --- Styling Shape --- */
+.shapes-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.shape {
+    position: absolute;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    opacity: 0.5;
+    animation:
+        floating 10s ease-in-out infinite alternate,
+        rotating 25s linear infinite;
+}
+
+/* -- Variasi Bentuk -- */
+.shape-circle {
+    border-radius: 50%;
+}
+
+.shape-rectangle {
+    border-radius: 10%;
+}
+
+.shape-rhombus {
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    border-radius: 0;
+}
+
+.shape-triangle {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    border-radius: 0;
+}
+
+.shape-triangle-down {
+    clip-path: polygon(50% 100%, 0 0, 100% 0);
+    border-radius: 0;
+}
+
+/* --- [PERUBAHAN BESAR] Distribusi Ulang Posisi Shape (Desktop) --- */
+.shape-1 {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    left: 8%;
+    animation-duration: 8s, 25s;
+}
+
+.shape-2 {
+    width: 50px;
+    height: 50px;
+    top: 15%;
+    right: 10%;
+    animation-duration: 7s, 15s;
+}
+
+.shape-3 {
+    width: 100px;
+    height: 100px;
+    bottom: 8%;
+    left: 15%;
+    border-radius: 15%;
+    animation-duration: 10s, 30s;
+    animation-delay: 0.5s;
+}
+
+.shape-4 {
+    width: 40px;
+    height: 40px;
+    top: 55%;
+    left: 5%;
+    animation-duration: 6s, 18s;
+}
+
+.shape-5 {
+    width: 60px;
+    height: 60px;
+    top: 65%;
+    right: 12%;
+    border-radius: 20%;
+    animation-duration: 9s, 22s;
+    animation-delay: 2s;
+}
+
+.shape-6 {
+    width: 120px;
+    height: 60px;
+    top: 8%;
+    right: 25%;
+    animation-duration: 12s, 35s;
+    opacity: 0.3;
+}
+
+.shape-7 {
+    width: 45px;
+    height: 45px;
+    bottom: 12%;
+    right: 8%;
+    animation-duration: 7s, 16s;
+    animation-delay: 1.5s;
+}
+
+.shape-8 {
+    width: 90px;
+    height: 90px;
+    top: 35%;
+    left: 15%;
+    animation-duration: 11s, 28s;
+}
+
+.shape-9 {
+    width: 30px;
+    height: 30px;
+    top: 6%;
+    left: 35%;
+    animation-duration: 5s, 12s;
+}
+
+.shape-10 {
+    width: 70px;
+    height: 70px;
+    bottom: 5%;
+    left: 45%;
+    animation-duration: 8s, 20s;
+    animation-delay: 3s;
+}
+
+.shape-11 {
+    width: 55px;
+    height: 55px;
+    bottom: 20%;
+    right: 25%;
+    animation-duration: 6s, 14s;
+}
+
+.shape-12 {
+    width: 25px;
+    height: 75px;
+    top: 25%;
+    left: 25%;
+    animation-duration: 9s, 24s;
+}
+
+.shape-13 {
+    width: 85px;
+    height: 85px;
+    top: 35%;
+    right: 35%;
+    animation-duration: 13s, 19s;
+    animation-delay: 1s;
+}
+
+.shape-14 {
+    width: 40px;
+    height: 40px;
+    bottom: 50%;
+    right: 5%;
+    animation-duration: 7s, 17s;
+}
+
+/* --- Keyframes Animasi --- */
+@keyframes floating {
+    from {
+        transform: translateY(0px) scale(1);
+    }
+
+    to {
+        transform: translateY(-25px) scale(1.05);
+    }
+}
+
+@keyframes rotating {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translate(-50%, 0);
+    }
+
+    40% {
+        transform: translate(-50%, -15px);
+    }
+
+    60% {
+        transform: translate(-50%, -7px);
+    }
+}
+
+@keyframes textFloat {
+    from {
+        transform: translateY(0px);
+    }
+
+    to {
+        transform: translateY(-8px);
+    }
+}
+
+/* --- [PERUBAHAN BESAR] Media Query untuk Mobile --- */
+@media (max-width: 768px) {
+    .header-content h1 {
+        font-size: 2.2rem;
+    }
+
+    .header-content p {
+        font-size: 1rem;
+    }
+
+    .header-content {
+        animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .scroll-down-btn {
+        width: 50px;
+        height: 50px;
+        bottom: 30px;
+    }
+
+    .scroll-down-btn svg {
+        width: 25px;
+        height: 25px;
+    }
+
+    /* Hanya sembunyikan shape terbesar, tampilkan 12 shape lainnya agar ramai */
+    .shape-6,
+    .shape-3 {
+        display: none;
+    }
+
+    /* Atur ulang ukuran dan posisi shape yang tersisa agar merata dan tidak berdesakan */
+    .shape-1 {
+        width: 45px;
+        height: 45px;
+        top: 10%;
+        left: 5%;
+    }
+
+    .shape-2 {
+        width: 35px;
+        height: 35px;
+        top: 12%;
+        right: 8%;
+    }
+
+    .shape-4 {
+        width: 30px;
+        height: 30px;
+        top: 40%;
+        left: 10%;
+    }
+
+    .shape-5 {
+        width: 40px;
+        height: 40px;
+        top: 70%;
+        right: 12%;
+    }
+
+    .shape-7 {
+        width: 35px;
+        height: 35px;
+        bottom: 8%;
+        right: 5%;
+    }
+
+    .shape-8 {
+        width: 60px;
+        height: 60px;
+        top: 25%;
+        left: 15%;
+        opacity: 0.3;
+    }
+
+    .shape-9 {
+        width: 20px;
+        height: 20px;
+        top: 5%;
+        left: 45%;
+    }
+
+    .shape-10 {
+        width: 45px;
+        height: 45px;
+        bottom: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .shape-11 {
+        width: 40px;
+        height: 40px;
+        bottom: 15%;
+        left: 10%;
+    }
+
+    .shape-12 {
+        width: 15px;
+        height: 45px;
+        top: 20%;
+        right: 30%;
+    }
+
+    .shape-13 {
+        display: none;
+    }
+
+    /* Tetap disembunyikan */
+    .shape-14 {
+        width: 30px;
+        height: 30px;
+        top: 55%;
+        right: 20%;
+    }
+}
+
+/* --- Main Content Styling --- */
+#main-content {
+    padding: 80px 20px;
+    background: radial-gradient(ellipse at center, #f5f7fa 0%, #e8edf3 100%);
+    /* Latar belakang body utama */
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.calculator-section h2 {
+    font-size: 2.5rem;
+    color: #1F2937;
+    margin-bottom: 40px;
+}
+
+/* --- Tab Styling --- */
+.tabs {
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.tab-btn {
+    padding: 12px 25px;
+    font-family: "Exo", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    border: 2px solid #e0e8f3;
+    background-color: #ffffff;
+    color: #4B5563;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    background-color: #f0f4f8;
+    border-color: #b8c5d6;
+}
+
+.tab-btn.active {
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.tab-content {
+    display: none;
+    /* Sembunyikan semua tab content */
+}
+
+.tab-content.active {
+    display: block;
+    /* Tampilkan hanya yang aktif */
+}
+
+/* --- Shape Grid & Card Styling --- */
+.shape-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.shape-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e8f3;
+    border-radius: 12px;
+    padding: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.shape-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(224, 232, 240, 0.8);
+    border-color: #b8c5d6;
+}
+
+.shape-card img {
+    height: 60px;
+    margin-bottom: 15px;
+}
+
+.shape-card h3 {
+    margin: 0;
+    color: #1F2937;
+    font-size: 1.2rem;
+}
+
+/* --- Calculator Panel Styling --- */
+.calculator-panel {
+    display: none;
+    /* Awalnya semua panel tersembunyi */
+    background-color: #ffffff;
+    border: 1px solid #e0e8f3;
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 40px;
+    text-align: left;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    color: #4B5563;
+    font-family: "Exo", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 20px;
+    padding: 5px;
+}
+
+.calculator-panel h3 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #1F2937;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.calculator-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.info-section img {
+    max-width: 150px;
+    display: block;
+    margin: 0 auto 20px auto;
+}
+
+.info-section h4,
+.calculation-section h4 {
+    font-size: 1.2rem;
+    color: #1F2937;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #f0f4f8;
+    padding-bottom: 10px;
+}
+
+.info-section p {
+    font-size: 1rem;
+    color: #4B5563;
+}
+
+.info-section code {
+    font-family: "Courier New", Courier, monospace;
+    background-color: #f0f4f8;
+    padding: 3px 6px;
+    border-radius: 4px;
+    color: #3b82f6;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 700;
+    color: #4B5563;
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e0e8f3;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: "Exo", sans-serif;
+    box-sizing: border-box;
+}
+
+.calc-btn {
+    width: 100%;
+    padding: 15px;
+    font-family: "Exo", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.calc-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.result-section {
+    display: none;
+    /* Hasil tersembunyi sampai dihitung */
+    margin-top: 30px;
+    background-color: #f8fafc;
+    border: 1px solid #e0e8f3;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.result-section p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+    color: #1F2937;
+}
+
+/* --- Footer Styling --- */
+.site-footer-main {
+    text-align: center;
+    padding: 30px 20px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    color: #4B5563;
+}
+
+.site-footer-main p {
+    color: white;
+    font-size: 1rem;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+    .calculator-layout {
+        grid-template-columns: 1fr;
+        /* Stack layout di mobile */
+    }
+
+    .shape-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 15px;
+    }
+
+    .calculator-section h2 {
+        font-size: 2rem;
+    }
+}
+
+/* --- Styling untuk Grup Tombol --- */
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.reset-btn {
+    width: 100%;
+    flex-basis: 40%;
+    /* Lebar tombol reset lebih kecil */
+    padding: 15px;
+    font-family: "Exo", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: 2px solid #e0e8f3;
+    border-radius: 8px;
+    background: transparent;
+    color: #4B5563;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.reset-btn:hover {
+    background-color: #f8fafc;
+    border-color: #b8c5d6;
+}

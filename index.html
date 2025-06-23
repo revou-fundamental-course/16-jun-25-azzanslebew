@@ -6,20 +6,319 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Geometri</title>
 
-    <!-- External CSS file for styling -->
+    <link rel="icon" href="/assets/images/logo.png" type="image/png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-    <!-- Header Content -->
-    <header></header>
+    <header class="site-header">
+        <div class="shapes-container">
+            <div class="shape shape-1 shape-rhombus"></div>
+            <div class="shape shape-2 shape-circle"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4 shape-triangle"></div>
+            <div class="shape shape-5"></div>
+            <div class="shape shape-6 shape-rectangle"></div>
+            <div class="shape shape-7 shape-circle"></div>
+            <div class="shape shape-8 shape-rhombus"></div>
+            <div class="shape shape-9 shape-circle"></div>
+            <div class="shape shape-10 shape-triangle-down"></div>
+            <div class="shape shape-11 shape-circle"></div>
+            <div class="shape shape-12 shape-rectangle"></div>
+            <div class="shape shape-13"></div>
+            <div class="shape shape-14 shape-circle"></div>
+        </div>
 
-    <!-- Main Content -->
-    <main></main>
+        <div class="header-content">
+            <h1>Welcome to <span class="gradient-text">Kalkulator Geometri</span></h1>
+            <p>
+                Platform modern untuk menghitung berbagai macam rumus geometri, mulai dari bangun datar hingga bangun
+                ruang, dengan visualisasi yang interaktif dan mudah dipahami.
+            </p>
+        </div>
 
-    <!-- Footer Content -->
-    <footer></footer>
+        <a href="#main-content" class="scroll-down-btn" aria-label="Scroll down">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+        </a>
+    </header>
+
+    <main id="main-content">
+        <section class="calculator-section">
+            <div class="container">
+                <h2>Pilih Bentuk yang Ingin Dihitung</h2>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="datar">Bangun Datar</button>
+                    <button class="tab-btn" data-tab="ruang">Bangun Ruang</button>
+                </div>
+                <div class="tab-content active" id="datar">
+                    <div class="shape-grid">
+                        <div class="shape-card" data-shape="persegi"><img src="assets/images/persegi.png" alt="Persegi">
+                            <h3>Persegi</h3>
+                        </div>
+                        <div class="shape-card" data-shape="persegi-panjang"><img
+                                src="assets/images/persegi-panjang.png" alt="Persegi Panjang">
+                            <h3>Persegi Panjang</h3>
+                        </div>
+                        <div class="shape-card" data-shape="segitiga"><img src="assets/images/segitiga.png"
+                                alt="Segitiga">
+                            <h3>Segitiga</h3>
+                        </div>
+                        <div class="shape-card" data-shape="lingkaran"><img src="assets/images/lingkaran.png"
+                                alt="Lingkaran">
+                            <h3>Lingkaran</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="ruang">
+                    <div class="shape-grid">
+                        <div class="shape-card" data-shape="kubus"><img src="assets/images/kubus.png" alt="Kubus">
+                            <h3>Kubus</h3>
+                        </div>
+                        <div class="shape-card" data-shape="balok"><img src="assets/images/balok.png" alt="Balok">
+                            <h3>Balok</h3>
+                        </div>
+                        <div class="shape-card" data-shape="prisma-segitiga"><img src="assets/images/prisma.png"
+                                alt="Prisma Segitiga">
+                            <h3>Prisma Segitiga</h3>
+                        </div>
+                        <div class="shape-card" data-shape="tabung"><img src="assets/images/tabung.png" alt="Tabung">
+                            <h3>Tabung</h3>
+                        </div>
+                    </div>
+                </div>
+                <div id="calculator-panel-container" style="display: none;">
+                    <div class="calculator-panel" id="persegi-calculator">
+                        <button class="back-btn">&larr; Kembali</button>
+                        <h3>Kalkulator Persegi</h3>
+                        <div class="calculator-layout">
+                            <div class="info-section"><img src="assets/images/persegi.png" alt="Ilustrasi Persegi">
+                                <h4>Rumus</h4>
+                                <p>Luas: <code>L = s &times; s</code></p>
+                                <p>Keliling: <code>K = 4 &times; s</code></p>
+                            </div>
+                            <div class="calculation-section">
+                                <h4>Masukkan Nilai</h4>
+                                <div class="input-group"><label for="persegi-sisi">Sisi (s)</label><input type="number"
+                                        id="persegi-sisi" placeholder="Contoh: 5"></div>
+                                <div class="button-group"><button class="calc-btn"
+                                        data-shape="persegi">Hitung</button><button class="reset-btn"
+                                        data-shape="persegi">Reset</button></div>
+                                <div class="result-section" id="persegi-result">
+                                    <h4>Hasil Perhitungan</h4>
+                                    <p id="persegi-summary"></p>
+                                    <p id="persegi-luas"></p>
+                                    <p id="persegi-keliling"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="calculator-panel" id="persegi-panjang-calculator">
+                        <button class="back-btn">&larr; Kembali</button>
+                        <h3>Kalkulator Persegi Panjang</h3>
+                        <div class="calculator-layout">
+                            <div class="info-section"><img src="assets/images/persegi-panjang.png"
+                                    alt="Ilustrasi Persegi Panjang">
+                                <h4>Rumus</h4>
+                                <p>Luas: <code>L = p &times; l</code></p>
+                                <p>Keliling: <code>K = 2 &times; (p + l)</code></p>
+                            </div>
+                            <div class="calculation-section">
+                                <h4>Masukkan Nilai</h4>
+                                <div class="input-group"><label for="pp-panjang">Panjang (p)</label><input type="number"
+                                        id="pp-panjang" placeholder="Contoh: 8"></div>
+                                <div class="input-group"><label for="pp-lebar">Lebar (l)</label><input type="number"
+                                        id="pp-lebar" placeholder="Contoh: 4"></div>
+                                <div class="button-group"><button class="calc-btn"
+                                        data-shape="persegi-panjang">Hitung</button><button class="reset-btn"
+                                        data-shape="persegi-panjang">Reset</button></div>
+                                <div class="result-section" id="persegi-panjang-result">
+                                    <h4>Hasil Perhitungan</h4>
+                                    <p id="pp-summary"></p>
+                                    <p id="pp-luas"></p>
+                                    <p id="pp-keliling"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="calculator-panel" id="segitiga-calculator">
+                        <button class="back-btn">&larr; Kembali</button>
+                        <h3>Kalkulator Segitiga</h3>
+                        <div class="calculator-layout">
+                            <div class="info-section"><img src="assets/images/segitiga.png" alt="Ilustrasi Segitiga">
+                                <h4>Rumus</h4>
+                                <p>Luas: <code>L = 1/2 &times; a &times; t</code></p>
+                                <p>Keliling: <code>K = s1 + s2 + s3</code></p>
+                            </div>
+                            <div class="calculation-section">
+                                <h4>Masukkan Nilai</h4>
+                                <div class="input-group"><label for="segitiga-alas">Alas (a)</label><input type="number"
+                                        id="segitiga-alas" placeholder="Untuk Luas"></div>
+                                <div class="input-group"><label for="segitiga-tinggi">Tinggi (t)</label><input
+                                        type="number" id="segitiga-tinggi" placeholder="Untuk Luas"></div>
+                                <div class="input-group"><label for="segitiga-s1">Sisi 1</label><input type="number"
+                                        id="segitiga-s1" placeholder="Untuk Keliling"></div>
+                                <div class="input-group"><label for="segitiga-s2">Sisi 2</label><input type="number"
+                                        id="segitiga-s2" placeholder="Untuk Keliling"></div>
+                                <div class="input-group"><label for="segitiga-s3">Sisi 3</label><input type="number"
+                                        id="segitiga-s3" placeholder="Untuk Keliling"></div>
+                                <div class="button-group"><button class="calc-btn"
+                                        data-shape="segitiga">Hitung</button><button class="reset-btn"
+                                        data-shape="segitiga">Reset</button></div>
+                                <div class="result-section" id="segitiga-result">
+                                    <h4>Hasil Perhitungan</h4>
+                                    <p id="segitiga-luas"></p>
+                                    <p id="segitiga-keliling"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="calculator-panel" id="lingkaran-calculator">
+                        <button class="back-btn">&larr; Kembali</button>
+                        <h3>Kalkulator Lingkaran</h3>
+                        <div class="calculator-layout">
+                            <div class="info-section"><img src="assets/images/lingkaran.png" alt="Ilustrasi Lingkaran">
+                                <h4>Rumus</h4>
+                                <p>Luas: <code>L = &pi; &times; r&sup2;</code></p>
+                                <p>Keliling: <code>K = 2 &times; &pi; &times; r</code></p>
+                            </div>
+                            <div class="calculation-section">
+                                <h4>Masukkan Nilai</h4>
+                                <div class="input-group"><label for="lingkaran-jari">Jari-jari (r)</label><input
+                                        type="number" id="lingkaran-jari" placeholder="Contoh: 7"></div>
+                                <div class="button-group"><button class="calc-btn"
+                                        data-shape="lingkaran">Hitung</button><button class="reset-btn"
+                                        data-shape="lingkaran">Reset</button></div>
+                                <div class="result-section" id="lingkaran-result">
+                                    <h4>Hasil Perhitungan</h4>
+                                    <p id="lingkaran-summary"></p>
+                                    <p id="lingkaran-luas"></p>
+                                    <p id="lingkaran-keliling"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="calculator-panel" id="kubus-calculator">
+                        <button class="back-btn">&larr; Kembali</button>
+                        <h3>Kalkulator Kubus</h3>
+                        <div class="calculator-layout">
+                            <div class="info-section"><img src="assets/images/kubus.png" alt="Ilustrasi Kubus">
+                                <h4>Rumus</h4>
+                                <p>Volume: <code>V = s&sup3;</code></p>
+                            </div>
+                            <div class="calculation-section">
+                                <h4>Masukkan Nilai</h4>
+                                <div class="input-group"><label for="kubus-sisi">Sisi (s)</label><input type="number"
+                                        id="kubus-sisi" placeholder="Contoh: 4"></div>
+                                <div class="button-group"><button class="calc-btn"
+                                        data-shape="kubus">Hitung</button><button class="reset-btn"
+                                        data-shape="kubus">Reset</button></div>
+                                <div class="result-section" id="kubus-result">
+                                    <h4>Hasil Perhitungan</h4>
+                                    <p id="kubus-summary"></p>
+                                    <p id="kubus-volume"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="calculator-panel" id="balok-calculator">
+                        <button class="back-btn">&larr; Kembali</button>
+                        <h3>Kalkulator Balok</h3>
+                        <div class="calculator-layout">
+                            <div class="info-section"><img src="assets/images/balok.png" alt="Ilustrasi Balok">
+                                <h4>Rumus</h4>
+                                <p>Volume: <code>V = p &times; l &times; t</code></p>
+                            </div>
+                            <div class="calculation-section">
+                                <h4>Masukkan Nilai</h4>
+                                <div class="input-group"><label for="balok-panjang">Panjang (p)</label><input
+                                        type="number" id="balok-panjang" placeholder="Contoh: 8"></div>
+                                <div class="input-group"><label for="balok-lebar">Lebar (l)</label><input type="number"
+                                        id="balok-lebar" placeholder="Contoh: 5"></div>
+                                <div class="input-group"><label for="balok-tinggi">Tinggi (t)</label><input
+                                        type="number" id="balok-tinggi" placeholder="Contoh: 3"></div>
+                                <div class="button-group"><button class="calc-btn"
+                                        data-shape="balok">Hitung</button><button class="reset-btn"
+                                        data-shape="balok">Reset</button></div>
+                                <div class="result-section" id="balok-result">
+                                    <h4>Hasil Perhitungan</h4>
+                                    <p id="balok-summary"></p>
+                                    <p id="balok-volume"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="calculator-panel" id="prisma-segitiga-calculator">
+                        <button class="back-btn">&larr; Kembali</button>
+                        <h3>Kalkulator Prisma Segitiga</h3>
+                        <div class="calculator-layout">
+                            <div class="info-section"><img src="assets/images/prisma.png"
+                                    alt="Ilustrasi Prisma Segitiga">
+                                <h4>Rumus</h4>
+                                <p>Volume: <code>V = (1/2 &times; a &times; t&#8346;) &times; T</code></p>
+                            </div>
+                            <div class="calculation-section">
+                                <h4>Masukkan Nilai</h4>
+                                <div class="input-group"><label for="prisma-alas">Alas Segitiga (a)</label><input
+                                        type="number" id="prisma-alas" placeholder="Contoh: 6"></div>
+                                <div class="input-group"><label for="prisma-tinggi-alas">Tinggi Alas
+                                        (t&#8346;)</label><input type="number" id="prisma-tinggi-alas"
+                                        placeholder="Contoh: 4"></div>
+                                <div class="input-group"><label for="prisma-tinggi">Tinggi Prisma (T)</label><input
+                                        type="number" id="prisma-tinggi" placeholder="Contoh: 10"></div>
+                                <div class="button-group"><button class="calc-btn"
+                                        data-shape="prisma-segitiga">Hitung</button><button class="reset-btn"
+                                        data-shape="prisma-segitiga">Reset</button></div>
+                                <div class="result-section" id="prisma-segitiga-result">
+                                    <h4>Hasil Perhitungan</h4>
+                                    <p id="prisma-summary"></p>
+                                    <p id="prisma-volume"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="calculator-panel" id="tabung-calculator">
+                        <button class="back-btn">&larr; Kembali</button>
+                        <h3>Kalkulator Tabung</h3>
+                        <div class="calculator-layout">
+                            <div class="info-section"><img src="assets/images/tabung.png" alt="Ilustrasi Tabung">
+                                <h4>Rumus</h4>
+                                <p>Volume: <code>V = &pi; &times; r&sup2; &times; t</code></p>
+                            </div>
+                            <div class="calculation-section">
+                                <h4>Masukkan Nilai</h4>
+                                <div class="input-group"><label for="tabung-jari">Jari-jari (r)</label><input
+                                        type="number" id="tabung-jari" placeholder="Contoh: 7"></div>
+                                <div class="input-group"><label for="tabung-tinggi">Tinggi (t)</label><input
+                                        type="number" id="tabung-tinggi" placeholder="Contoh: 10"></div>
+                                <div class="button-group"><button class="calc-btn"
+                                        data-shape="tabung">Hitung</button><button class="reset-btn"
+                                        data-shape="tabung">Reset</button></div>
+                                <div class="result-section" id="tabung-result">
+                                    <h4>Hasil Perhitungan</h4>
+                                    <p id="tabung-summary"></p>
+                                    <p id="tabung-volume"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer-main">
+        <p>&copy; <span id="year"></span> Kalkulator Geometri. Dibuat dengan Penuh Semangat.</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
 </body>
 
 </html>
