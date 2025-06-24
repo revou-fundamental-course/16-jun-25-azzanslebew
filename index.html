@@ -10,10 +10,17 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+
+    <div id="preloader">
+        <div class="loader-shape"></div>
+        <p>Memuat Kalkulator...</p>
+    </div>
 
     <header class="site-header">
         <div class="shapes-container">
@@ -52,26 +59,27 @@
     <main id="main-content">
         <section class="calculator-section">
             <div class="container">
-                <h2>Pilih Bentuk yang Ingin Dihitung</h2>
-                <div class="tabs">
+                <h2 data-aos="fade-up">Pilih Bentuk yang Ingin Dihitung</h2>
+                <div class="tabs" data-aos="fade-up" data-aos-delay="100">
                     <button class="tab-btn active" data-tab="datar">Bangun Datar</button>
                     <button class="tab-btn" data-tab="ruang">Bangun Ruang</button>
                 </div>
                 <div class="tab-content active" id="datar">
                     <div class="shape-grid">
-                        <div class="shape-card" data-shape="persegi"><img src="assets/images/persegi.png" alt="Persegi">
+                        <div class="shape-card" data-shape="persegi" data-aos="zoom-in-up" data-aos-delay="200"><img
+                                src="assets/images/persegi.png" alt="Persegi">
                             <h3>Persegi</h3>
                         </div>
-                        <div class="shape-card" data-shape="persegi-panjang"><img
-                                src="assets/images/persegi-panjang.png" alt="Persegi Panjang">
+                        <div class="shape-card" data-shape="persegi-panjang" data-aos="zoom-in-up" data-aos-delay="300">
+                            <img src="assets/images/persegi-panjang.png" alt="Persegi Panjang">
                             <h3>Persegi Panjang</h3>
                         </div>
-                        <div class="shape-card" data-shape="segitiga"><img src="assets/images/segitiga.png"
-                                alt="Segitiga">
+                        <div class="shape-card" data-shape="segitiga" data-aos="zoom-in-up" data-aos-delay="400"><img
+                                src="assets/images/segitiga.png" alt="Segitiga">
                             <h3>Segitiga</h3>
                         </div>
-                        <div class="shape-card" data-shape="lingkaran"><img src="assets/images/lingkaran.png"
-                                alt="Lingkaran">
+                        <div class="shape-card" data-shape="lingkaran" data-aos="zoom-in-up" data-aos-delay="500"><img
+                                src="assets/images/lingkaran.png" alt="Lingkaran">
                             <h3>Lingkaran</h3>
                         </div>
                     </div>
@@ -313,12 +321,12 @@
         </section>
     </main>
 
-    <footer class="site-footer-main">
+    <footer class="site-footer-main" data-aos="fade-in" data-aos-anchor-placement="top-bottom">
         <p>&copy; <span id="year"></span> Kalkulator Geometri. Dibuat dengan Penuh Semangat.</p>
     </footer>
 
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="js/script.js"></script>
-</body>
 </body>
 
 </html>

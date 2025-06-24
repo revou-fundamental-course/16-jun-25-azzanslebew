@@ -1,5 +1,25 @@
+// Menunggu seluruh struktur DOM siap sebelum menjalankan skrip
 document.addEventListener('DOMContentLoaded', function () {
-    // --- Bagian Fungsionalitas Umum ---
+
+    // --- BAGIAN 1: INISIALISASI & SETUP AWAL ---
+
+    // 1. Logika untuk Preloader
+    const preloader = document.getElementById('preloader');
+    window.addEventListener('load', () => {
+        if (preloader) {
+            preloader.classList.add('hidden');
+        }
+    });
+
+    // 2. Inisialisasi AOS (Animate On Scroll)
+    AOS.init({
+        duration: 1000,
+        once: true,
+        offset: 50,
+        easing: 'ease-in-out',
+    });
+
+    // 3. Seleksi Elemen DOM
     const tabsContainer = document.querySelector('.tabs');
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -10,62 +30,96 @@ document.addEventListener('DOMContentLoaded', function () {
     const calcButtons = document.querySelectorAll('.calc-btn');
     const resetButtons = document.querySelectorAll('.reset-btn');
 
-    // Fungsi untuk handle Tab
+
+    // --- BAGIAN 2: VALIDASI INPUT UNTUK TOMBOL HITUNG ---
+
+    function setupInputValidation(panel) {
+        const inputs = panel.querySelectorAll('input[type="number"]');
+        const calcButton = panel.querySelector('.calc-btn');
+
+        if (!calcButton) return; // Keluar jika tidak ada tombol hitung
+
+        const checkInputs = () => {
+            let isEnabled = false;
+
+            // Logika khusus untuk Segitiga karena punya 2 kemungkinan kalkulasi
+            if (panel.id === 'segitiga-calculator') {
+                const alas = panel.querySelector('#segitiga-alas').value;
+                const tinggi = panel.querySelector('#segitiga-tinggi').value;
+                const s1 = panel.querySelector('#segitiga-s1').value;
+                const s2 = panel.querySelector('#segitiga-s2').value;
+                const s3 = panel.querySelector('#segitiga-s3').value;
+
+                const canCalcArea = alas.trim() !== '' && tinggi.trim() !== '';
+                const canCalcPerimeter = s1.trim() !== '' && s2.trim() !== '' && s3.trim() !== '';
+
+                isEnabled = canCalcArea || canCalcPerimeter;
+            } else {
+                // Logika umum untuk semua kalkulator lainnya
+                // Tombol aktif jika SEMUA input di panel tersebut terisi
+                isEnabled = Array.from(inputs).every(input => input.value.trim() !== '');
+            }
+
+            calcButton.disabled = !isEnabled;
+        };
+
+        // Tambahkan event listener 'input' ke setiap field
+        inputs.forEach(input => {
+            input.addEventListener('input', checkInputs);
+        });
+
+        // Jalankan pengecekan saat pertama kali untuk mengatur state awal tombol
+        checkInputs();
+    }
+
+    // Terapkan fungsi validasi di atas ke setiap panel kalkulator
+    calculatorPanels.forEach(panel => {
+        setupInputValidation(panel);
+    });
+    
+
+    // --- BAGIAN 3: EVENT LISTENERS (INTERAKSI PENGGUNA) ---
+
+    // 1. Event Listener untuk Tombol Tab (Bangun Datar / Bangun Ruang)
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
-            // Reset semua tab buttons dan content
             tabButtons.forEach(btn => btn.classList.remove('active'));
             tabContents.forEach(content => {
                 content.classList.remove('active');
-                content.style.display = 'none'; // Tambahkan ini
+                content.style.display = 'none';
             });
-
-            // Aktifkan tab yang dipilih
             button.classList.add('active');
             const targetTab = document.getElementById(button.dataset.tab);
             targetTab.classList.add('active');
-            targetTab.style.display = 'block'; // Tambahkan ini
+            targetTab.style.display = 'block';
         });
     });
 
-    // Fungsi untuk menampilkan panel kalkulator
+    // 2. Event Listener untuk Kartu Bentuk (Persegi, Lingkaran, dll.)
     shapeCards.forEach(card => {
         card.addEventListener('click', () => {
             const shape = card.dataset.shape;
             const calculatorPanel = document.getElementById(`${shape}-calculator`);
-
-            // Sembunyikan semua tab content dan tabs
             tabsContainer.style.display = 'none';
             tabContents.forEach(content => {
                 content.style.display = 'none';
             });
-
-            // Sembunyikan semua panel kalkulator dulu
             calculatorPanels.forEach(panel => {
                 panel.style.display = 'none';
             });
-
-            // Tampilkan panel kalkulator yang dipilih
             calculatorPanelContainer.style.display = 'block';
             calculatorPanel.style.display = 'block';
         });
     });
 
-    // Fungsi untuk tombol kembali (FIXED)
+    // 3. Event Listener untuk Tombol Kembali
     backButtons.forEach(button => {
         button.addEventListener('click', () => {
-            // Sembunyikan SEMUA panel kalkulator
             calculatorPanels.forEach(panel => {
                 panel.style.display = 'none';
             });
-
-            // Sembunyikan container panel kalkulator
             calculatorPanelContainer.style.display = 'none';
-
-            // Tampilkan kembali tabs
             tabsContainer.style.display = 'flex';
-
-            // Cari tab yang aktif dan tampilkan
             const activeTabButton = document.querySelector('.tab-btn.active');
             if (activeTabButton) {
                 const activeTabId = activeTabButton.dataset.tab;
@@ -74,7 +128,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     activeTabContent.style.display = 'block';
                 }
             } else {
-                // Fallback ke tab pertama
                 tabButtons[0].classList.add('active');
                 document.getElementById('datar').classList.add('active');
                 document.getElementById('datar').style.display = 'block';
@@ -82,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Fungsi untuk tombol hitung
+    // 4. Event Listener untuk Tombol Hitung
     calcButtons.forEach(button => {
         button.addEventListener('click', function () {
             const shape = this.dataset.shape;
@@ -91,44 +144,47 @@ document.addEventListener('DOMContentLoaded', function () {
                 case 'persegi-panjang': calculatePersegiPanjang(); break;
                 case 'segitiga': calculateSegitiga(); break;
                 case 'lingkaran': calculateLingkaran(); break;
-                case 'jajar-genjang': calculateJajarGenjang(); break;
                 case 'kubus': calculateKubus(); break;
                 case 'balok': calculateBalok(); break;
                 case 'prisma-segitiga': calculatePrisma(); break;
-                case 'limas': calculateLimas(); break;
                 case 'tabung': calculateTabung(); break;
             }
         });
     });
 
-    // Fungsi untuk Tombol Reset
+    // 5. Event Listener untuk Tombol Reset
     resetButtons.forEach(button => {
         button.addEventListener('click', function () {
             const shape = this.dataset.shape;
             const panel = document.getElementById(`${shape}-calculator`);
-            // Reset semua input di dalam panel
-            panel.querySelectorAll('input').forEach(input => input.value = '');
-            // Sembunyikan bagian hasil
-            const resultSection = panel.querySelector('.result-section');
-            if (resultSection) {
-                resultSection.style.display = 'none';
+            if (panel) {
+                panel.querySelectorAll('input').forEach(input => input.value = '');
+                const resultSection = panel.querySelector('.result-section');
+                if (resultSection) {
+                    resultSection.style.display = 'none';
+                }
+                // [BARU] Panggil kembali validasi untuk menonaktifkan tombol hitung setelah reset
+                setupInputValidation(panel); 
             }
         });
     });
 
-    // Fungsi helper untuk membersihkan desimal
-    function formatNumber(num) {
-        return parseFloat(num.toFixed(10)); // Menghindari error presisi JS
-    }
+    // --- BAGIAN 4: FUNGSI KALKULATOR ---
 
-    // --- Bagian Logika Kalkulator ---
+    // Fungsi helper untuk memformat angka (menghindari desimal panjang)
+    function formatNumber(num) {
+        // Menggunakan toFixed(2) untuk konsistensi 2 angka desimal, bisa diubah
+        const fixedNum = parseFloat(num.toFixed(2));
+        // Mengembalikan ke string untuk menghapus .00 jika tidak perlu
+        return String(fixedNum);
+    }
 
     function calculatePersegi() {
         const sisi = parseFloat(document.getElementById('persegi-sisi').value);
         if (isNaN(sisi) || sisi <= 0) { alert("Masukkan nilai sisi yang valid."); return; }
-        document.getElementById('persegi-summary').innerHTML = `Sisi = ${formatNumber(sisi)} cm`;
-        document.getElementById('persegi-luas').innerHTML = `Luas = ${formatNumber(sisi * sisi)} cm<sup>2</sup>`;
-        document.getElementById('persegi-keliling').innerHTML = `Keliling = ${formatNumber(4 * sisi)} cm`;
+        document.getElementById('persegi-summary').innerHTML = `Sisi = <b>${formatNumber(sisi)}</b> cm`;
+        document.getElementById('persegi-luas').innerHTML = `Luas = <b>${formatNumber(sisi * sisi)}</b> cm<sup>2</sup>`;
+        document.getElementById('persegi-keliling').innerHTML = `Keliling = <b>${formatNumber(4 * sisi)}</b> cm`;
         document.getElementById('persegi-result').style.display = 'block';
     }
 
@@ -136,9 +192,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const panjang = parseFloat(document.getElementById('pp-panjang').value);
         const lebar = parseFloat(document.getElementById('pp-lebar').value);
         if (isNaN(panjang) || isNaN(lebar) || panjang <= 0 || lebar <= 0) { alert("Masukkan nilai panjang dan lebar yang valid."); return; }
-        document.getElementById('pp-summary').innerHTML = `Panjang = ${formatNumber(panjang)} cm, Lebar = ${formatNumber(lebar)} cm`;
-        document.getElementById('pp-luas').innerHTML = `Luas = ${formatNumber(panjang * lebar)} cm<sup>2</sup>`;
-        document.getElementById('pp-keliling').innerHTML = `Keliling = ${formatNumber(2 * (panjang + lebar))} cm`;
+        document.getElementById('pp-summary').innerHTML = `Panjang = <b>${formatNumber(panjang)}</b> cm, Lebar = <b>${formatNumber(lebar)}</b> cm`;
+        document.getElementById('pp-luas').innerHTML = `Luas = <b>${formatNumber(panjang * lebar)}</b> cm<sup>2</sup>`;
+        document.getElementById('pp-keliling').innerHTML = `Keliling = <b>${formatNumber(2 * (panjang + lebar))}</b> cm`;
         document.getElementById('persegi-panjang-result').style.display = 'block';
     }
 
@@ -152,32 +208,36 @@ document.addEventListener('DOMContentLoaded', function () {
         const kelilingP = document.getElementById('segitiga-keliling');
         luasP.innerHTML = ''; kelilingP.innerHTML = '';
         let calculated = false;
+
         if (!isNaN(alas) && alas > 0 && !isNaN(tinggi) && tinggi > 0) {
-            luasP.innerHTML = `Luas = ${formatNumber(0.5 * alas * tinggi)} cm<sup>2</sup>`;
+            luasP.innerHTML = `Luas = <b>${formatNumber(0.5 * alas * tinggi)}</b> cm<sup>2</sup>`;
             calculated = true;
         }
         if (!isNaN(s1) && s1 > 0 && !isNaN(s2) && s2 > 0 && !isNaN(s3) && s3 > 0) {
-            kelilingP.innerHTML = `Keliling = ${formatNumber(s1 + s2 + s3)} cm`;
+            kelilingP.innerHTML = `Keliling = <b>${formatNumber(s1 + s2 + s3)}</b> cm`;
             calculated = true;
         }
-        if (!calculated) { alert('Masukkan nilai yang valid untuk menghitung luas atau keliling.'); return; }
+        if (!calculated) {
+            alert('Input tidak cukup untuk melakukan perhitungan. Silakan lengkapi.');
+            return;
+        }
         document.getElementById('segitiga-result').style.display = 'block';
     }
 
     function calculateLingkaran() {
         const jari = parseFloat(document.getElementById('lingkaran-jari').value);
         if (isNaN(jari) || jari <= 0) { alert("Masukkan nilai jari-jari yang valid."); return; }
-        document.getElementById('lingkaran-summary').innerHTML = `Jari-jari = ${formatNumber(jari)} cm`;
-        document.getElementById('lingkaran-luas').innerHTML = `Luas = ${formatNumber(Math.PI * jari * jari)} cm<sup>2</sup>`;
-        document.getElementById('lingkaran-keliling').innerHTML = `Keliling = ${formatNumber(2 * Math.PI * jari)} cm`;
+        document.getElementById('lingkaran-summary').innerHTML = `Jari-jari = <b>${formatNumber(jari)}</b> cm`;
+        document.getElementById('lingkaran-luas').innerHTML = `Luas = <b>${formatNumber(Math.PI * jari * jari)}</b> cm<sup>2</sup>`;
+        document.getElementById('lingkaran-keliling').innerHTML = `Keliling = <b>${formatNumber(2 * Math.PI * jari)}</b> cm`;
         document.getElementById('lingkaran-result').style.display = 'block';
     }
 
     function calculateKubus() {
         const sisi = parseFloat(document.getElementById('kubus-sisi').value);
         if (isNaN(sisi) || sisi <= 0) { alert("Masukkan nilai sisi yang valid."); return; }
-        document.getElementById('kubus-summary').innerHTML = `Sisi = ${formatNumber(sisi)} cm`;
-        document.getElementById('kubus-volume').innerHTML = `Volume = ${formatNumber(Math.pow(sisi, 3))} cm<sup>3</sup>`;
+        document.getElementById('kubus-summary').innerHTML = `Sisi = <b>${formatNumber(sisi)}</b> cm`;
+        document.getElementById('kubus-volume').innerHTML = `Volume = <b>${formatNumber(Math.pow(sisi, 3))}</b> cm<sup>3</sup>`;
         document.getElementById('kubus-result').style.display = 'block';
     }
 
@@ -186,8 +246,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const l = parseFloat(document.getElementById('balok-lebar').value);
         const t = parseFloat(document.getElementById('balok-tinggi').value);
         if (isNaN(p) || isNaN(l) || isNaN(t) || p <= 0 || l <= 0 || t <= 0) { alert("Masukkan nilai panjang, lebar, dan tinggi yang valid."); return; }
-        document.getElementById('balok-summary').innerHTML = `p = ${formatNumber(p)} cm, l = ${formatNumber(l)} cm, t = ${formatNumber(t)} cm`;
-        document.getElementById('balok-volume').innerHTML = `Volume = ${formatNumber(p * l * t)} cm<sup>3</sup>`;
+        document.getElementById('balok-summary').innerHTML = `p=<b>${formatNumber(p)}</b>, l=<b>${formatNumber(l)}</b>, t=<b>${formatNumber(t)}</b> cm`;
+        document.getElementById('balok-volume').innerHTML = `Volume = <b>${formatNumber(p * l * t)}</b> cm<sup>3</sup>`;
         document.getElementById('balok-result').style.display = 'block';
     }
 
@@ -196,8 +256,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const ta = parseFloat(document.getElementById('prisma-tinggi-alas').value);
         const T = parseFloat(document.getElementById('prisma-tinggi').value);
         if (isNaN(a) || isNaN(ta) || isNaN(T) || a <= 0 || ta <= 0 || T <= 0) { alert("Masukkan semua nilai yang valid."); return; }
-        document.getElementById('prisma-summary').innerHTML = `Alas Segitiga = ${formatNumber(a)} cm, Tinggi Alas = ${formatNumber(ta)} cm, Tinggi Prisma = ${formatNumber(T)} cm`;
-        document.getElementById('prisma-volume').innerHTML = `Volume = ${formatNumber(0.5 * a * ta * T)} cm<sup>3</sup>`;
+        document.getElementById('prisma-summary').innerHTML = `Alas Segitiga = <b>${formatNumber(a)}</b>, T.Alas = <b>${formatNumber(ta)}</b>, T.Prisma = <b>${formatNumber(T)}</b> cm`;
+        document.getElementById('prisma-volume').innerHTML = `Volume = <b>${formatNumber(0.5 * a * ta * T)}</b> cm<sup>3</sup>`;
         document.getElementById('prisma-segitiga-result').style.display = 'block';
     }
 
@@ -205,11 +265,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const jari = parseFloat(document.getElementById('tabung-jari').value);
         const tinggi = parseFloat(document.getElementById('tabung-tinggi').value);
         if (isNaN(jari) || isNaN(tinggi) || jari <= 0 || tinggi <= 0) { alert("Masukkan nilai jari-jari dan tinggi yang valid."); return; }
-        document.getElementById('tabung-summary').innerHTML = `Jari-jari = ${formatNumber(jari)} cm, Tinggi = ${formatNumber(tinggi)} cm`;
-        document.getElementById('tabung-volume').innerHTML = `Volume = ${formatNumber(Math.PI * jari * jari * tinggi)} cm<sup>3</sup>`;
+        document.getElementById('tabung-summary').innerHTML = `Jari-jari = <b>${formatNumber(jari)}</b> cm, Tinggi = <b>${formatNumber(tinggi)}</b> cm`;
+        document.getElementById('tabung-volume').innerHTML = `Volume = <b>${formatNumber(Math.PI * jari * jari * tinggi)}</b> cm<sup>3</sup>`;
         document.getElementById('tabung-result').style.display = 'block';
     }
 
-    // --- Footer Year ---
-    document.getElementById('year').textContent = new Date().getFullYear();
+    // --- BAGIAN 5: LAIN-LAIN ---
+
+    // 1. Update Tahun di Footer
+    const yearSpan = document.getElementById('year');
+    if (yearSpan) {
+        yearSpan.textContent = new Date().getFullYear();
+    }
 });
