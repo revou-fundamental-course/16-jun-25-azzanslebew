@@ -1,4 +1,4 @@
-/* --- Preloader Styling --- */
+/* --- 1. Preloader Styling --- */
 #preloader {
     position: fixed;
     top: 0;
@@ -38,51 +38,8 @@
     animation: pulse-text 2s infinite ease-in-out;
 }
 
-@keyframes spin-and-morph {
-    0% {
-        transform: rotate(0deg);
-        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-        border-radius: 0%;
-    }
 
-    25% {
-        transform: rotate(90deg);
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-        border-radius: 50%;
-    }
-
-    50% {
-        transform: rotate(180deg);
-        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-        border-radius: 0%;
-    }
-
-    75% {
-        transform: rotate(270deg);
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-        border-radius: 10%;
-    }
-
-    100% {
-        transform: rotate(360deg);
-        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-        border-radius: 0%;
-    }
-}
-
-@keyframes pulse-text {
-
-    0%,
-    100% {
-        opacity: 0.7;
-    }
-
-    50% {
-        opacity: 1;
-    }
-}
-
-/* --- General Styling --- */
+/* --- 2. General & Body Styling --- */
 html {
     scroll-behavior: smooth;
 }
@@ -96,7 +53,14 @@ body {
     overflow-x: hidden;
 }
 
-/* --- Header Styling --- */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+
+/* --- 3. Header Section --- */
 .site-header {
     position: relative;
     width: 100%;
@@ -109,7 +73,7 @@ body {
     overflow: hidden;
 }
 
-/* --- Konten Teks --- */
+/* Header Content */
 .header-content {
     position: relative;
     z-index: 2;
@@ -138,7 +102,7 @@ body {
     line-height: 1.6;
 }
 
-/* --- Tombol Scroll Down --- */
+/* Scroll Down Button */
 .scroll-down-btn {
     position: absolute;
     bottom: 40px;
@@ -174,7 +138,7 @@ body {
     color: #1f2937;
 }
 
-/* --- Styling Shape --- */
+/* Animated Shapes */
 .shapes-container {
     position: absolute;
     top: 0;
@@ -220,7 +184,7 @@ body {
     border-radius: 0;
 }
 
-/* Durasi & Delay Animasi: 1. Datang (arrive), 2. Mengambang (floating), 3. Berputar (rotating) */
+/* Animation Durations & Delays: 1. Arrive, 2. Floating, 3. Rotating */
 .shape-1 {
     width: 80px;
     height: 80px;
@@ -365,7 +329,51 @@ body {
 }
 
 
-/* --- Keyframes Animasi --- */
+/* --- 4. Keyframe Animations --- */
+@keyframes spin-and-morph {
+    0% {
+        transform: rotate(0deg);
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        border-radius: 0%;
+    }
+
+    25% {
+        transform: rotate(90deg);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        border-radius: 50%;
+    }
+
+    50% {
+        transform: rotate(180deg);
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        border-radius: 0%;
+    }
+
+    75% {
+        transform: rotate(270deg);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        border-radius: 10%;
+    }
+
+    100% {
+        transform: rotate(360deg);
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        border-radius: 0%;
+    }
+}
+
+@keyframes pulse-text {
+
+    0%,
+    100% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
 @keyframes shape-arrive {
     from {
         opacity: 0;
@@ -439,8 +447,329 @@ body {
     }
 }
 
-/* --- Media Query untuk Mobile --- */
+
+/* --- 5. Main Content Styling --- */
+#main-content {
+    padding: 80px 20px;
+    background: #f9fafb;
+}
+
+.calculator-section h2 {
+    font-size: 2.5rem;
+    color: #1F2937;
+    margin-bottom: 40px;
+}
+
+/* Tabs (2D/3D Selection) */
+.tabs {
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.tab-btn {
+    padding: 12px 25px;
+    font-family: "Exo", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    border: 2px solid #e0e8f3;
+    background-color: #ffffff;
+    color: #4B5563;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    background-color: #f0f4f8;
+    border-color: #b8c5d6;
+}
+
+.tab-btn.active {
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Shape Grid & Cards */
+.shape-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+}
+
+.shape-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e8f3;
+    border-radius: 12px;
+    padding: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.shape-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(224, 232, 240, 0.8);
+    border-color: #b8c5d6;
+}
+
+.shape-card img {
+    height: 60px;
+    margin-bottom: 15px;
+}
+
+.shape-card h3 {
+    margin: 0;
+    color: #1F2937;
+    font-size: 1.2rem;
+}
+
+
+/* --- 6. Calculator Panel Styling --- */
+/* General Panel Layout */
+.calculator-panel {
+    display: none;
+    /* Hidden by default, shown via JS */
+    background-color: #ffffff;
+    border: 1px solid #e0e8f3;
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 40px;
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(224, 232, 240, 0.7);
+    animation: fadeIn 0.5s ease;
+}
+
+.calculator-panel h3 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #1F2937;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.calculator-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* Info & Calculation Sections */
+.info-section img {
+    max-width: 150px;
+    display: block;
+    margin: 0 auto 20px auto;
+}
+
+.info-section h4,
+.calculation-section h4 {
+    font-size: 1.2rem;
+    color: #1F2937;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #f0f4f8;
+    padding-bottom: 10px;
+}
+
+.info-section p {
+    font-size: 1rem;
+    color: #4B5563;
+}
+
+.info-section code {
+    font-family: "Courier New", Courier, monospace;
+    background-color: #f0f4f8;
+    padding: 3px 6px;
+    border-radius: 4px;
+    color: #3b82f6;
+}
+
+/* Input Fields */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 700;
+    color: #4B5563;
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e0e8f3;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: "Exo", sans-serif;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Buttons (Calculate, Reset, Back, Choice) */
+.back-btn {
+    background: none;
+    border: none;
+    color: #4B5563;
+    font-family: "Exo", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 20px;
+    padding: 5px;
+    transition: color 0.3s;
+}
+
+.back-btn:hover {
+    color: #3b82f6;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.calc-btn {
+    flex-grow: 1;
+    padding: 15px;
+    font-family: "Exo", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.calc-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.calc-btn:disabled {
+    background: #9ca3af; /* Warna abu-abu yang netral */
+    opacity: 0.7;
+    cursor: not-allowed;
+    /* Nonaktifkan efek hover saat disabled */
+    transform: none;
+    box-shadow: none;
+}
+
+.reset-btn {
+    flex-basis: 40%;
+    padding: 15px;
+    font-family: "Exo", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: 2px solid #e0e8f3;
+    border-radius: 8px;
+    background: transparent;
+    color: #4B5563;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.reset-btn:hover {
+    background-color: #f8fafc;
+    border-color: #b8c5d6;
+}
+
+/* New styles for Triangle calculation choice */
+.choice-button-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.choice-btn {
+    flex: 1;
+    padding: 10px 15px;
+    font-family: "Exo", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border: 2px solid #e0e8f3;
+    background-color: #ffffff;
+    color: #4B5563;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.choice-btn.active {
+    background-color: #e0e7ff;
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+/* Result Display */
+.result-section {
+    display: none;
+    /* Hidden by default, shown via JS */
+    margin-top: 30px;
+    background-color: #f8fafc;
+    border: 1px solid #e0e8f3;
+    border-left: 4px solid #3b82f6;
+    border-radius: 8px;
+    padding: 20px;
+    animation: fadeIn 0.5s ease;
+}
+
+.result-section h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.result-section p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+    color: #1F2937;
+}
+
+.result-section p code {
+    font-weight: bold;
+    color: #3b82f6;
+}
+
+
+/* --- 7. Footer Styling --- */
+.site-footer-main {
+    text-align: center;
+    padding: 30px 20px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+}
+
+.site-footer-main p {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+
+/* --- 8. Responsive Design (Media Queries) --- */
 @media (max-width: 768px) {
+
+    /* Header */
     .header-content h1 {
         font-size: 2.2rem;
     }
@@ -464,6 +793,7 @@ body {
         height: 25px;
     }
 
+    /* Hide some shapes on mobile for performance */
     .shape-6,
     .shape-3,
     .shape-13 {
@@ -548,281 +878,8 @@ body {
         top: 55%;
         right: 20%;
     }
-}
 
-/* --- Main Content Styling --- */
-#main-content {
-    padding: 80px 20px;
-    background: #f9fafb;
-}
-
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.calculator-section h2 {
-    font-size: 2.5rem;
-    color: #1F2937;
-    margin-bottom: 40px;
-}
-
-/* --- Tab Styling --- */
-.tabs {
-    margin-bottom: 40px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-.tab-btn {
-    padding: 12px 25px;
-    font-family: "Exo", sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    border: 2px solid #e0e8f3;
-    background-color: #ffffff;
-    color: #4B5563;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.tab-btn:hover {
-    background-color: #f0f4f8;
-    border-color: #b8c5d6;
-}
-
-.tab-btn.active {
-    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-    color: #ffffff;
-    border-color: transparent;
-    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-}
-
-.tab-content {
-    display: none;
-}
-
-.tab-content.active {
-    display: block;
-}
-
-/* --- Shape Grid & Card Styling --- */
-.shape-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 25px;
-}
-
-.shape-card {
-    background-color: #ffffff;
-    border: 1px solid #e0e8f3;
-    border-radius: 12px;
-    padding: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.shape-card:hover { 
-    box-shadow: 0 10px 25px rgba(224, 232, 240, 0.8);
-    border-color: #b8c5d6;
-}
-
-.shape-card img {
-    height: 60px;
-    margin-bottom: 15px;
-}
-
-.shape-card h3 {
-    margin: 0;
-    color: #1F2937;
-    font-size: 1.2rem;
-}
-
-/* --- Calculator Panel Styling --- */
-.calculator-panel {
-    display: none;
-    background-color: #ffffff;
-    border: 1px solid #e0e8f3;
-    border-radius: 12px;
-    padding: 30px;
-    margin-top: 40px;
-    text-align: left;
-    box-shadow: 0 10px 30px rgba(224, 232, 240, 0.7);
-}
-
-.back-btn {
-    background: none;
-    border: none;
-    color: #4B5563;
-    font-family: "Exo", sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    margin-bottom: 20px;
-    padding: 5px;
-}
-
-.calculator-panel h3 {
-    text-align: center;
-    font-size: 1.8rem;
-    color: #1F2937;
-    margin-top: 0;
-    margin-bottom: 30px;
-}
-
-.calculator-layout {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 40px;
-    align-items: flex-start;
-}
-
-.info-section img {
-    max-width: 150px;
-    display: block;
-    margin: 0 auto 20px auto;
-}
-
-.info-section h4,
-.calculation-section h4 {
-    font-size: 1.2rem;
-    color: #1F2937;
-    margin-bottom: 15px;
-    border-bottom: 2px solid #f0f4f8;
-    padding-bottom: 10px;
-}
-
-.info-section p {
-    font-size: 1rem;
-    color: #4B5563;
-}
-
-.info-section code {
-    font-family: "Courier New", Courier, monospace;
-    background-color: #f0f4f8;
-    padding: 3px 6px;
-    border-radius: 4px;
-    color: #3b82f6;
-}
-
-.input-group {
-    margin-bottom: 20px;
-}
-
-.input-group label {
-    display: block;
-    font-weight: 700;
-    color: #4B5563;
-    margin-bottom: 8px;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #e0e8f3;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-family: "Exo", sans-serif;
-    box-sizing: border-box;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.input-group input:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-
-.button-group {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.calc-btn {
-    flex-grow: 1;
-    padding: 15px;
-    font-family: "Exo", sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 8px;
-    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-    color: #ffffff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-}
-
-.calc-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
-}
-
-.calc-btn:disabled {
-    background: #9ca3af; /* Warna abu-abu yang netral */
-    opacity: 0.7;
-    cursor: not-allowed;
-    /* Nonaktifkan efek hover saat disabled */
-    transform: none;
-    box-shadow: none;
-}
-
-.reset-btn {
-    flex-basis: 40%;
-    padding: 15px;
-    font-family: "Exo", sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    border: 2px solid #e0e8f3;
-    border-radius: 8px;
-    background: transparent;
-    color: #4B5563;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.reset-btn:hover {
-    background-color: #f8fafc;
-    border-color: #b8c5d6;
-}
-
-
-.result-section {
-    display: none;
-    margin-top: 30px;
-    background-color: #f8fafc;
-    border: 1px solid #e0e8f3;
-    border-left: 4px solid #3b82f6;
-    border-radius: 8px;
-    padding: 20px;
-    animation: fadeIn 0.5s ease;
-}
-
-.result-section p {
-    margin: 10px 0;
-    font-size: 1.1rem;
-    color: #1F2937;
-}
-
-/* --- Footer Styling --- */
-.site-footer-main {
-    text-align: center;
-    padding: 30px 20px;
-    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-}
-
-.site-footer-main p {
-    color: #ffffff;
-    font-size: 1rem;
-}
-
-/* --- Responsive Design (Tambahan) --- */
-@media (max-width: 768px) {
+    /* Main Content */
     .calculator-layout {
         grid-template-columns: 1fr;
     }
@@ -835,4 +892,126 @@ body {
     .calculator-section h2 {
         font-size: 2rem;
     }
+
+    .info-section {
+        order: 2;
+    }
+
+    /* Move info below calculation on mobile */
+    .calculation-section {
+        order: 1;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .reset-btn {
+        flex-basis: auto;
+    }
+}
+
+/* --- 9. Toast Notification Styling --- */
+
+/**
+ * Kontainer Toast
+ * Posisinya fixed di pojok kanan atas layar untuk menampung
+ * semua notifikasi yang muncul.
+ */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    /* Pastikan di atas semua elemen lain */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    /* Jarak antar toast */
+    align-items: flex-end;
+    /* Toast rata ke kanan */
+}
+
+/**
+ * Style Dasar untuk setiap Toast
+ * Mengatur tampilan umum, padding, shadow, dan transisi untuk animasi.
+ */
+.toast {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    color: #fff;
+    font-family: 'Exo', sans-serif;
+    font-size: 0.95rem;
+    min-width: 320px;
+    max-width: 400px;
+    cursor: pointer;
+    border-left: 5px solid transparent;
+    /* Aksen garis di kiri */
+
+    /* State awal (di luar layar) & transisi untuk animasi slide */
+    transform: translateX(120%);
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/**
+ * State 'show'
+ * Saat kelas ini ditambahkan, toast akan meluncur masuk ke dalam layar.
+ */
+.toast.show {
+    transform: translateX(0);
+}
+
+/**
+ * Ikon di dalam Toast
+ * Menggunakan flexbox agar tidak mengecil dan punya jarak yang pas.
+ */
+.toast .toast-icon {
+    flex-shrink: 0;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toast .toast-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* --- Variasi Tipe Toast --- */
+
+/**
+ * Toast Success (Hijau)
+ * Untuk notifikasi keberhasilan.
+ */
+.toast.success {
+    background-color: #2D3A31;
+    /* Dark Green */
+    border-left-color: #38C172;
+    /* Bright Green Accent */
+}
+
+/**
+ * Toast Error (Merah)
+ * Untuk notifikasi kesalahan atau validasi.
+ */
+.toast.error {
+    background-color: #3E2C2E;
+    /* Dark Red */
+    border-left-color: #E3342F;
+    /* Bright Red Accent */
+}
+
+/**
+ * Toast Info (Biru)
+ * Untuk notifikasi informasi umum.
+ */
+.toast.info {
+    background-color: #2A3844;
+    /* Dark Blue */
+    border-left-color: #3490DC;
+    /* Bright Blue Accent */
 }

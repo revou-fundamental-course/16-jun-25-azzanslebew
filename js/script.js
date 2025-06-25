@@ -1,280 +1,328 @@
-// Menunggu seluruh struktur DOM siap sebelum menjalankan skrip
-document.addEventListener('DOMContentLoaded', function () {
+/**
+ * @file script.js
+ * @description Ini adalah pusat kendali untuk semua keajaiban di Kalkulator Geometri.
+ * Mulai dari menampilkan panel yang tepat hingga menghitung rumus dan memunculkan notifikasi keren.
+ */
 
-    // --- BAGIAN 1: INISIALISASI & SETUP AWAL ---
+document.addEventListener('DOMContentLoaded', () => {
 
-    // 1. Logika untuk Preloader
-    const preloader = document.getElementById('preloader');
-    window.addEventListener('load', () => {
-        if (preloader) {
-            preloader.classList.add('hidden');
+    // ===================================================================================
+    // BAGIAN 1: PERSIAPAN PANGGUNG & SELEKSI AKTOR
+    // Di sini kita kumpulkan semua elemen penting dari halaman HTML.
+    // ===================================================================================
+
+    const ui = {
+        preloader: document.getElementById('preloader'),
+        yearSpan: document.getElementById('year'),
+        shapeSelectionView: document.getElementById('shape-selection'),
+        calculatorPanelContainer: document.getElementById('calculator-panel-container'),
+        tabButtons: document.querySelectorAll('.tab-btn'),
+        tabContents: document.querySelectorAll('.tab-content'),
+        shapeCards: document.querySelectorAll('.shape-card'),
+        calculatorPanels: document.querySelectorAll('.calculator-panel'),
+        backButtons: document.querySelectorAll('.back-btn'),
+        calculateButtons: document.querySelectorAll('.calc-btn'),
+        resetButtons: document.querySelectorAll('.reset-btn'),
+        triangleChoiceButtons: document.querySelectorAll('.choice-btn[data-shape="segitiga"]'),
+        triangleLuasInputs: document.getElementById('segitiga-luas-inputs'),
+        triangleKelilingInputs: document.getElementById('segitiga-keliling-inputs'),
+        toastContainer: document.getElementById('toast-container'),
+    };
+
+    // Mari kita mulai pertunjukannya!
+    initializePage();
+    setupEventListeners();
+
+    // ===================================================================================
+    // BAGIAN 2: MENGHUBUNGKAN AKSI PENGGUNA DENGAN FUNGSI
+    // ===================================================================================
+
+    function setupEventListeners() {
+        ui.tabButtons.forEach(button => button.addEventListener('click', handleTabSwitch));
+        ui.shapeCards.forEach(card => card.addEventListener('click', handleShapeSelection));
+        ui.backButtons.forEach(button => button.addEventListener('click', showShapeSelectionView));
+        ui.calculateButtons.forEach(button => button.addEventListener('click', handleCalculation));
+        ui.resetButtons.forEach(button => button.addEventListener('click', handleReset));
+        ui.triangleChoiceButtons.forEach(button => button.addEventListener('click', handleTriangleChoice));
+
+        ui.calculatorPanels.forEach(panel => {
+            const inputs = panel.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => input.addEventListener('input', () => validateInputs(panel)));
+        });
+    }
+
+    // ===================================================================================
+    // BAGIAN 3: SUTRADARA & PENANGANAN SKENARIO
+    // ===================================================================================
+
+    function initializePage() {
+        AOS.init({ duration: 800, once: true });
+        window.addEventListener('load', () => ui.preloader.classList.add('hidden'));
+        ui.yearSpan.textContent = new Date().getFullYear();
+    }
+
+    function handleTabSwitch() {
+        const tabTarget = this.dataset.tab;
+        ui.tabButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        ui.tabContents.forEach(content => content.classList.toggle('active', content.id === tabTarget));
+    }
+
+    function handleShapeSelection() {
+        const shape = this.dataset.shape;
+        const targetPanel = document.getElementById(`${shape}-calculator`);
+        if (targetPanel) {
+            ui.shapeSelectionView.style.display = 'none';
+            ui.calculatorPanelContainer.style.display = 'block';
+            ui.calculatorPanels.forEach(panel => panel.style.display = 'none');
+            targetPanel.style.display = 'block';
+            validateInputs(targetPanel);
         }
-    });
+    }
 
-    // 2. Inisialisasi AOS (Animate On Scroll)
-    AOS.init({
-        duration: 1000,
-        once: true,
-        offset: 50,
-        easing: 'ease-in-out',
-    });
+    /**
+     * Kembali ke menu utama dan membersihkan semua form.
+     * Ini adalah perbaikan untuk bug #1.
+     */
+    function showShapeSelectionView() {
+        ui.calculatorPanelContainer.style.display = 'none';
+        ui.shapeSelectionView.style.display = 'block';
 
-    // 3. Seleksi Elemen DOM
-    const tabsContainer = document.querySelector('.tabs');
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-    const shapeCards = document.querySelectorAll('.shape-card');
-    const calculatorPanelContainer = document.getElementById('calculator-panel-container');
-    const calculatorPanels = document.querySelectorAll('.calculator-panel');
-    const backButtons = document.querySelectorAll('.back-btn');
-    const calcButtons = document.querySelectorAll('.calc-btn');
-    const resetButtons = document.querySelectorAll('.reset-btn');
+        // Trik jitu: "klik" semua tombol reset secara virtual.
+        // Ini memastikan semua form bersih saat pengguna kembali ke menu.
+        ui.resetButtons.forEach(button => button.click());
+    }
 
+    function handleTriangleChoice() {
+        const choice = this.dataset.choice;
+        const panel = this.closest('.calculator-panel');
+        ui.triangleChoiceButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        ui.triangleLuasInputs.style.display = choice === 'luas' ? 'block' : 'none';
+        ui.triangleKelilingInputs.style.display = choice === 'keliling' ? 'block' : 'none';
+        validateInputs(panel);
+    }
 
-    // --- BAGIAN 2: VALIDASI INPUT UNTUK TOMBOL HITUNG ---
-
-    function setupInputValidation(panel) {
-        const inputs = panel.querySelectorAll('input[type="number"]');
-        const calcButton = panel.querySelector('.calc-btn');
-
-        if (!calcButton) return; // Keluar jika tidak ada tombol hitung
-
-        const checkInputs = () => {
-            let isEnabled = false;
-
-            // Logika khusus untuk Segitiga karena punya 2 kemungkinan kalkulasi
-            if (panel.id === 'segitiga-calculator') {
-                const alas = panel.querySelector('#segitiga-alas').value;
-                const tinggi = panel.querySelector('#segitiga-tinggi').value;
-                const s1 = panel.querySelector('#segitiga-s1').value;
-                const s2 = panel.querySelector('#segitiga-s2').value;
-                const s3 = panel.querySelector('#segitiga-s3').value;
-
-                const canCalcArea = alas.trim() !== '' && tinggi.trim() !== '';
-                const canCalcPerimeter = s1.trim() !== '' && s2.trim() !== '' && s3.trim() !== '';
-
-                isEnabled = canCalcArea || canCalcPerimeter;
-            } else {
-                // Logika umum untuk semua kalkulator lainnya
-                // Tombol aktif jika SEMUA input di panel tersebut terisi
-                isEnabled = Array.from(inputs).every(input => input.value.trim() !== '');
-            }
-
-            calcButton.disabled = !isEnabled;
+    function handleCalculation() {
+        const shape = this.dataset.shape;
+        const calculationMap = {
+            'persegi': calculatePersegi,
+            'persegi-panjang': calculatePersegiPanjang,
+            'lingkaran': calculateLingkaran,
+            'segitiga': calculateSegitiga,
+            'kubus': calculateKubus,
+            'balok': calculateBalok,
+            'prisma-segitiga': calculatePrisma,
+            'tabung': calculateTabung,
         };
-
-        // Tambahkan event listener 'input' ke setiap field
-        inputs.forEach(input => {
-            input.addEventListener('input', checkInputs);
-        });
-
-        // Jalankan pengecekan saat pertama kali untuk mengatur state awal tombol
-        checkInputs();
+        if (calculationMap[shape]) {
+            calculationMap[shape]();
+        }
     }
 
-    // Terapkan fungsi validasi di atas ke setiap panel kalkulator
-    calculatorPanels.forEach(panel => {
-        setupInputValidation(panel);
-    });
-    
-
-    // --- BAGIAN 3: EVENT LISTENERS (INTERAKSI PENGGUNA) ---
-
-    // 1. Event Listener untuk Tombol Tab (Bangun Datar / Bangun Ruang)
-    tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            tabContents.forEach(content => {
-                content.classList.remove('active');
-                content.style.display = 'none';
-            });
-            button.classList.add('active');
-            const targetTab = document.getElementById(button.dataset.tab);
-            targetTab.classList.add('active');
-            targetTab.style.display = 'block';
-        });
-    });
-
-    // 2. Event Listener untuk Kartu Bentuk (Persegi, Lingkaran, dll.)
-    shapeCards.forEach(card => {
-        card.addEventListener('click', () => {
-            const shape = card.dataset.shape;
-            const calculatorPanel = document.getElementById(`${shape}-calculator`);
-            tabsContainer.style.display = 'none';
-            tabContents.forEach(content => {
-                content.style.display = 'none';
-            });
-            calculatorPanels.forEach(panel => {
-                panel.style.display = 'none';
-            });
-            calculatorPanelContainer.style.display = 'block';
-            calculatorPanel.style.display = 'block';
-        });
-    });
-
-    // 3. Event Listener untuk Tombol Kembali
-    backButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            calculatorPanels.forEach(panel => {
-                panel.style.display = 'none';
-            });
-            calculatorPanelContainer.style.display = 'none';
-            tabsContainer.style.display = 'flex';
-            const activeTabButton = document.querySelector('.tab-btn.active');
-            if (activeTabButton) {
-                const activeTabId = activeTabButton.dataset.tab;
-                const activeTabContent = document.getElementById(activeTabId);
-                if (activeTabContent) {
-                    activeTabContent.style.display = 'block';
-                }
-            } else {
-                tabButtons[0].classList.add('active');
-                document.getElementById('datar').classList.add('active');
-                document.getElementById('datar').style.display = 'block';
+    function handleReset() {
+        const panel = this.closest('.calculator-panel');
+        if (panel) {
+            panel.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
+            const resultSection = panel.querySelector('.result-section');
+            if (resultSection) {
+                resultSection.style.display = 'none';
             }
-        });
-    });
-
-    // 4. Event Listener untuk Tombol Hitung
-    calcButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const shape = this.dataset.shape;
-            switch (shape) {
-                case 'persegi': calculatePersegi(); break;
-                case 'persegi-panjang': calculatePersegiPanjang(); break;
-                case 'segitiga': calculateSegitiga(); break;
-                case 'lingkaran': calculateLingkaran(); break;
-                case 'kubus': calculateKubus(); break;
-                case 'balok': calculateBalok(); break;
-                case 'prisma-segitiga': calculatePrisma(); break;
-                case 'tabung': calculateTabung(); break;
-            }
-        });
-    });
-
-    // 5. Event Listener untuk Tombol Reset
-    resetButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const shape = this.dataset.shape;
-            const panel = document.getElementById(`${shape}-calculator`);
-            if (panel) {
-                panel.querySelectorAll('input').forEach(input => input.value = '');
-                const resultSection = panel.querySelector('.result-section');
-                if (resultSection) {
-                    resultSection.style.display = 'none';
-                }
-                // [BARU] Panggil kembali validasi untuk menonaktifkan tombol hitung setelah reset
-                setupInputValidation(panel); 
-            }
-        });
-    });
-
-    // --- BAGIAN 4: FUNGSI KALKULATOR ---
-
-    // Fungsi helper untuk memformat angka (menghindari desimal panjang)
-    function formatNumber(num) {
-        // Menggunakan toFixed(2) untuk konsistensi 2 angka desimal, bisa diubah
-        const fixedNum = parseFloat(num.toFixed(2));
-        // Mengembalikan ke string untuk menghapus .00 jika tidak perlu
-        return String(fixedNum);
+            validateInputs(panel);
+        }
     }
+
+    // ===================================================================================
+    // BAGIAN 4: SISTEM NOTIFIKASI TOAST
+    // ===================================================================================
+
+    function showToast({ type = 'info', message, duration = 3000 }) {
+        const toastInfo = {
+            success: { icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>`, className: 'success' },
+            error: { icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>`, className: 'error' },
+            info: { icon: `<svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>`, className: 'info' }
+        };
+        const info = toastInfo[type];
+        const toast = document.createElement('div');
+        toast.className = `toast ${info.className}`;
+        toast.innerHTML = `<div class="toast-icon">${info.icon}</div> <div class="toast-message">${message}</div>`;
+        ui.toastContainer.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.addEventListener('transitionend', () => toast.remove());
+        }, duration);
+    }
+
+    // ===================================================================================
+    // BAGIAN 5: LOGIKA INTI & PEMBANTU
+    // ===================================================================================
+
+    function getInputValue(id) { return parseFloat(document.getElementById(id).value); }
+    function formatNumber(num) { return String(parseFloat(num.toFixed(2))); }
+
+    function showResult(shape, content) {
+        const resultPanel = document.getElementById(`${shape}-result`);
+        resultPanel.querySelectorAll('p').forEach(p => p.innerHTML = '');
+        for (const key in content) {
+            const element = document.getElementById(`${shape}-${key}`);
+            if (element) {
+                element.innerHTML = content[key];
+            }
+        }
+        resultPanel.style.display = 'block';
+    }
+
+    function validateInputs(panel) {
+        const calcButton = panel.querySelector('.calc-btn');
+        let isReady = false;
+        if (panel.id === 'segitiga-calculator') {
+            const activeChoice = panel.querySelector('.choice-btn.active').dataset.choice;
+            const inputs = activeChoice === 'luas' ?
+                Array.from(ui.triangleLuasInputs.querySelectorAll('input')) :
+                Array.from(ui.triangleKelilingInputs.querySelectorAll('input'));
+            isReady = inputs.every(input => input.value.trim() !== '');
+        } else {
+            const inputs = Array.from(panel.querySelectorAll('input[type="number"]'));
+            isReady = inputs.every(input => input.value.trim() !== '');
+        }
+        calcButton.disabled = !isReady;
+    }
+
+    // --- Mesin Perhitungan untuk Setiap Bentuk ---
 
     function calculatePersegi() {
-        const sisi = parseFloat(document.getElementById('persegi-sisi').value);
-        if (isNaN(sisi) || sisi <= 0) { alert("Masukkan nilai sisi yang valid."); return; }
-        document.getElementById('persegi-summary').innerHTML = `Sisi = <b>${formatNumber(sisi)}</b> cm`;
-        document.getElementById('persegi-luas').innerHTML = `Luas = <b>${formatNumber(sisi * sisi)}</b> cm<sup>2</sup>`;
-        document.getElementById('persegi-keliling').innerHTML = `Keliling = <b>${formatNumber(4 * sisi)}</b> cm`;
-        document.getElementById('persegi-result').style.display = 'block';
+        const resultPanel = document.getElementById('persegi-result');
+        if (resultPanel) resultPanel.style.display = 'none';
+
+        const sisi = getInputValue('persegi-sisi');
+        if (isNaN(sisi) || sisi <= 0) return showToast({ type: 'error', message: 'Nilai sisi harus angka positif lebih dari 0.' });
+
+        showResult('persegi', {
+            summary: `Dengan sisi <code>${formatNumber(sisi)}</code> cm:`,
+            luas: `Luas (L) = <code>${formatNumber(sisi * sisi)} cm²</code>`,
+            keliling: `Keliling (K) = <code>${formatNumber(4 * sisi)} cm</code>`
+        });
+        showToast({ type: 'success', message: 'Perhitungan persegi berhasil!' });
     }
 
     function calculatePersegiPanjang() {
-        const panjang = parseFloat(document.getElementById('pp-panjang').value);
-        const lebar = parseFloat(document.getElementById('pp-lebar').value);
-        if (isNaN(panjang) || isNaN(lebar) || panjang <= 0 || lebar <= 0) { alert("Masukkan nilai panjang dan lebar yang valid."); return; }
-        document.getElementById('pp-summary').innerHTML = `Panjang = <b>${formatNumber(panjang)}</b> cm, Lebar = <b>${formatNumber(lebar)}</b> cm`;
-        document.getElementById('pp-luas').innerHTML = `Luas = <b>${formatNumber(panjang * lebar)}</b> cm<sup>2</sup>`;
-        document.getElementById('pp-keliling').innerHTML = `Keliling = <b>${formatNumber(2 * (panjang + lebar))}</b> cm`;
-        document.getElementById('persegi-panjang-result').style.display = 'block';
-    }
+        const resultPanel = document.getElementById('persegi-panjang-result');
+        if (resultPanel) resultPanel.style.display = 'none';
 
-    function calculateSegitiga() {
-        const alas = parseFloat(document.getElementById('segitiga-alas').value);
-        const tinggi = parseFloat(document.getElementById('segitiga-tinggi').value);
-        const s1 = parseFloat(document.getElementById('segitiga-s1').value);
-        const s2 = parseFloat(document.getElementById('segitiga-s2').value);
-        const s3 = parseFloat(document.getElementById('segitiga-s3').value);
-        const luasP = document.getElementById('segitiga-luas');
-        const kelilingP = document.getElementById('segitiga-keliling');
-        luasP.innerHTML = ''; kelilingP.innerHTML = '';
-        let calculated = false;
+        const panjang = getInputValue('persegi-panjang-panjang');
+        const lebar = getInputValue('persegi-panjang-lebar');
+        if (isNaN(panjang) || isNaN(lebar) || panjang <= 0 || lebar <= 0) return showToast({ type: 'error', message: 'Panjang dan lebar harus lebih dari 0.' });
 
-        if (!isNaN(alas) && alas > 0 && !isNaN(tinggi) && tinggi > 0) {
-            luasP.innerHTML = `Luas = <b>${formatNumber(0.5 * alas * tinggi)}</b> cm<sup>2</sup>`;
-            calculated = true;
-        }
-        if (!isNaN(s1) && s1 > 0 && !isNaN(s2) && s2 > 0 && !isNaN(s3) && s3 > 0) {
-            kelilingP.innerHTML = `Keliling = <b>${formatNumber(s1 + s2 + s3)}</b> cm`;
-            calculated = true;
-        }
-        if (!calculated) {
-            alert('Input tidak cukup untuk melakukan perhitungan. Silakan lengkapi.');
-            return;
-        }
-        document.getElementById('segitiga-result').style.display = 'block';
+        showResult('persegi-panjang', {
+            summary: `Dengan panjang <code>${formatNumber(panjang)}</code> cm & lebar <code>${formatNumber(lebar)}</code> cm:`,
+            luas: `Luas (L) = <code>${formatNumber(panjang * lebar)} cm²</code>`,
+            keliling: `Keliling (K) = <code>${formatNumber(2 * (panjang + lebar))} cm</code>`
+        });
+        showToast({ type: 'success', message: 'Perhitungan persegi panjang berhasil!' });
     }
 
     function calculateLingkaran() {
-        const jari = parseFloat(document.getElementById('lingkaran-jari').value);
-        if (isNaN(jari) || jari <= 0) { alert("Masukkan nilai jari-jari yang valid."); return; }
-        document.getElementById('lingkaran-summary').innerHTML = `Jari-jari = <b>${formatNumber(jari)}</b> cm`;
-        document.getElementById('lingkaran-luas').innerHTML = `Luas = <b>${formatNumber(Math.PI * jari * jari)}</b> cm<sup>2</sup>`;
-        document.getElementById('lingkaran-keliling').innerHTML = `Keliling = <b>${formatNumber(2 * Math.PI * jari)}</b> cm`;
-        document.getElementById('lingkaran-result').style.display = 'block';
+        const resultPanel = document.getElementById('lingkaran-result');
+        if (resultPanel) resultPanel.style.display = 'none';
+
+        const jariJari = getInputValue('lingkaran-jari-jari');
+        if (isNaN(jariJari) || jariJari <= 0) return showToast({ type: 'error', message: 'Nilai jari-jari harus lebih dari 0.' });
+
+        showResult('lingkaran', {
+            summary: `Dengan jari-jari <code>${formatNumber(jariJari)}</code> cm:`,
+            luas: `Luas (L) ≈ <code>${formatNumber(Math.PI * jariJari ** 2)} cm²</code>`,
+            keliling: `Keliling (K) ≈ <code>${formatNumber(2 * Math.PI * jariJari)} cm</code>`
+        });
+        showToast({ type: 'success', message: 'Perhitungan lingkaran berhasil!' });
+    }
+
+    function calculateSegitiga() {
+        const resultPanel = document.getElementById('segitiga-result');
+        if (resultPanel) resultPanel.style.display = 'none';
+
+        const activeChoice = document.querySelector('.choice-btn[data-shape="segitiga"].active').dataset.choice;
+
+        if (activeChoice === 'luas') {
+            const alas = getInputValue('segitiga-alas');
+            const tinggi = getInputValue('segitiga-tinggi');
+            if (isNaN(alas) || isNaN(tinggi) || alas <= 0 || tinggi <= 0) return showToast({ type: 'error', message: 'Alas dan Tinggi harus lebih dari 0.' });
+
+            showResult('segitiga', {
+                luas: `Luas (L) = <code>${formatNumber(0.5 * alas * tinggi)} cm²</code>`
+            });
+        } else {
+            const sisi1 = getInputValue('segitiga-sisi1');
+            const sisi2 = getInputValue('segitiga-sisi2');
+            const sisi3 = getInputValue('segitiga-sisi3');
+            if (isNaN(sisi1) || isNaN(sisi2) || isNaN(sisi3) || sisi1 <= 0 || sisi2 <= 0 || sisi3 <= 0) return showToast({ type: 'error', message: 'Semua sisi harus lebih dari 0.' });
+
+            showResult('segitiga', {
+                keliling: `Keliling (K) = <code>${formatNumber(sisi1 + sisi2 + sisi3)} cm</code>`
+            });
+        }
+        showToast({ type: 'success', message: 'Perhitungan segitiga berhasil!' });
     }
 
     function calculateKubus() {
-        const sisi = parseFloat(document.getElementById('kubus-sisi').value);
-        if (isNaN(sisi) || sisi <= 0) { alert("Masukkan nilai sisi yang valid."); return; }
-        document.getElementById('kubus-summary').innerHTML = `Sisi = <b>${formatNumber(sisi)}</b> cm`;
-        document.getElementById('kubus-volume').innerHTML = `Volume = <b>${formatNumber(Math.pow(sisi, 3))}</b> cm<sup>3</sup>`;
-        document.getElementById('kubus-result').style.display = 'block';
+        const resultPanel = document.getElementById('kubus-result');
+        if (resultPanel) resultPanel.style.display = 'none';
+
+        const sisi = getInputValue('kubus-sisi');
+        if (isNaN(sisi) || sisi <= 0) return showToast({ type: 'error', message: 'Nilai sisi harus lebih dari 0.' });
+
+        showResult('kubus', {
+            summary: `Dengan sisi <code>${formatNumber(sisi)}</code> cm:`,
+            volume: `Volume (V) = <code>${formatNumber(sisi ** 3)} cm³</code>`
+        });
+        showToast({ type: 'success', message: 'Perhitungan kubus berhasil!' });
     }
 
     function calculateBalok() {
-        const p = parseFloat(document.getElementById('balok-panjang').value);
-        const l = parseFloat(document.getElementById('balok-lebar').value);
-        const t = parseFloat(document.getElementById('balok-tinggi').value);
-        if (isNaN(p) || isNaN(l) || isNaN(t) || p <= 0 || l <= 0 || t <= 0) { alert("Masukkan nilai panjang, lebar, dan tinggi yang valid."); return; }
-        document.getElementById('balok-summary').innerHTML = `p=<b>${formatNumber(p)}</b>, l=<b>${formatNumber(l)}</b>, t=<b>${formatNumber(t)}</b> cm`;
-        document.getElementById('balok-volume').innerHTML = `Volume = <b>${formatNumber(p * l * t)}</b> cm<sup>3</sup>`;
-        document.getElementById('balok-result').style.display = 'block';
+        const resultPanel = document.getElementById('balok-result');
+        if (resultPanel) resultPanel.style.display = 'none';
+
+        const panjang = getInputValue('balok-panjang');
+        const lebar = getInputValue('balok-lebar');
+        const tinggi = getInputValue('balok-tinggi');
+        if (isNaN(panjang) || isNaN(lebar) || isNaN(tinggi) || panjang <= 0 || lebar <= 0 || tinggi <= 0) return showToast({ type: 'error', message: 'Semua nilai harus lebih dari 0.' });
+
+        showResult('balok', {
+            summary: `Dengan panjang <code>${formatNumber(panjang)}</code> cm, lebar <code>${formatNumber(lebar)}</code> cm, & tinggi <code>${formatNumber(tinggi)}</code> cm:`,
+            volume: `Volume (V) = <code>${formatNumber(panjang * lebar * tinggi)} cm³</code>`
+        });
+        showToast({ type: 'success', message: 'Perhitungan balok berhasil!' });
     }
 
     function calculatePrisma() {
-        const a = parseFloat(document.getElementById('prisma-alas').value);
-        const ta = parseFloat(document.getElementById('prisma-tinggi-alas').value);
-        const T = parseFloat(document.getElementById('prisma-tinggi').value);
-        if (isNaN(a) || isNaN(ta) || isNaN(T) || a <= 0 || ta <= 0 || T <= 0) { alert("Masukkan semua nilai yang valid."); return; }
-        document.getElementById('prisma-summary').innerHTML = `Alas Segitiga = <b>${formatNumber(a)}</b>, T.Alas = <b>${formatNumber(ta)}</b>, T.Prisma = <b>${formatNumber(T)}</b> cm`;
-        document.getElementById('prisma-volume').innerHTML = `Volume = <b>${formatNumber(0.5 * a * ta * T)}</b> cm<sup>3</sup>`;
-        document.getElementById('prisma-segitiga-result').style.display = 'block';
+        const resultPanel = document.getElementById('prisma-segitiga-result');
+        if (resultPanel) resultPanel.style.display = 'none';
+
+        const alasSegitiga = getInputValue('prisma-alas');
+        const tinggiAlas = getInputValue('prisma-tinggi-alas');
+        const tinggiPrisma = getInputValue('prisma-tinggi');
+        if (isNaN(alasSegitiga) || isNaN(tinggiAlas) || isNaN(tinggiPrisma) || alasSegitiga <= 0 || tinggiAlas <= 0 || tinggiPrisma <= 0) return showToast({ type: 'error', message: 'Semua nilai prisma harus lebih dari 0.' });
+
+        showResult('prisma-segitiga', {
+            summary: `Dengan alas <code>${formatNumber(alasSegitiga)}</code> cm, tinggi alas <code>${formatNumber(tinggiAlas)}</code> cm, & tinggi prisma <code>${formatNumber(tinggiPrisma)}</code> cm:`,
+            volume: `Volume (V) = <code>${formatNumber(0.5 * alasSegitiga * tinggiAlas * tinggiPrisma)} cm³</code>`
+        });
+        showToast({ type: 'success', message: 'Perhitungan prisma berhasil!' });
     }
 
     function calculateTabung() {
-        const jari = parseFloat(document.getElementById('tabung-jari').value);
-        const tinggi = parseFloat(document.getElementById('tabung-tinggi').value);
-        if (isNaN(jari) || isNaN(tinggi) || jari <= 0 || tinggi <= 0) { alert("Masukkan nilai jari-jari dan tinggi yang valid."); return; }
-        document.getElementById('tabung-summary').innerHTML = `Jari-jari = <b>${formatNumber(jari)}</b> cm, Tinggi = <b>${formatNumber(tinggi)}</b> cm`;
-        document.getElementById('tabung-volume').innerHTML = `Volume = <b>${formatNumber(Math.PI * jari * jari * tinggi)}</b> cm<sup>3</sup>`;
-        document.getElementById('tabung-result').style.display = 'block';
+        const resultPanel = document.getElementById('tabung-result');
+        if (resultPanel) resultPanel.style.display = 'none';
+
+        const jariJari = getInputValue('tabung-jari-jari');
+        const tinggi = getInputValue('tabung-tinggi');
+        if (isNaN(jariJari) || isNaN(tinggi) || jariJari <= 0 || tinggi <= 0) return showToast({ type: 'error', message: 'Jari-jari dan tinggi harus lebih dari 0.' });
+
+        showResult('tabung', {
+            summary: `Dengan jari-jari <code>${formatNumber(jariJari)}</code> cm & tinggi <code>${formatNumber(tinggi)}</code> cm:`,
+            volume: `Volume (V) ≈ <code>${formatNumber(Math.PI * jariJari ** 2 * tinggi)} cm³</code>`
+        });
+        showToast({ type: 'success', message: 'Perhitungan tabung berhasil!' });
     }
 
-    // --- BAGIAN 5: LAIN-LAIN ---
-
-    // 1. Update Tahun di Footer
-    const yearSpan = document.getElementById('year');
-    if (yearSpan) {
-        yearSpan.textContent = new Date().getFullYear();
-    }
 });
