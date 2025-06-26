@@ -668,7 +668,8 @@ body {
 }
 
 .calc-btn:disabled {
-    background: #9ca3af; /* Warna abu-abu yang netral */
+    background: #9ca3af;
+    /* Warna abu-abu yang netral */
     opacity: 0.7;
     cursor: not-allowed;
     /* Nonaktifkan efek hover saat disabled */
@@ -894,12 +895,12 @@ body {
     }
 
     .info-section {
-        order: 2;
+        order: 1;
     }
 
     /* Move info below calculation on mobile */
     .calculation-section {
-        order: 1;
+        order: 2;
     }
 
     .button-group {
@@ -908,6 +909,33 @@ body {
 
     .reset-btn {
         flex-basis: auto;
+    }
+
+    /**
+     * Ubah posisi kontainer toast agar berada di tengah secara horizontal
+     * dengan sedikit jarak dari tepi layar.
+     */
+    #toast-container {
+        left: 10px;
+        right: 10px;
+        top: 10px;
+        width: auto;
+        /* Biarkan lebar diatur oleh left/right */
+        align-items: center;
+        /* Pusatkan toast di dalam kontainer */
+    }
+
+    /**
+     * Buat lebar toast menjadi fleksibel.
+     * Hapus `min-width` agar tidak terlalu lebar di layar sempit.
+     */
+    .toast {
+        width: 30%;
+        min-width: 0;
+        max-width: 100px;
+        /* Batas lebar maks, bagus untuk tablet */
+        font-size: 0.9rem;
+        /* Sedikit kecilkan font agar pas */
     }
 }
 
